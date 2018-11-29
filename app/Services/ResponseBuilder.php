@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Response;
 
 trait ResponseBuilder
 {
+    /**
+     * Это надстройка над фасадом Response Laravel.
+     * Просто в REST API response зачастую шаблонный, по стандарту.
+     */
     private $jsonOptions = JSON_UNESCAPED_SLASHES+JSON_UNESCAPED_UNICODE;
 
     private $successResponse = ['status'=>'ok'];
@@ -44,6 +48,13 @@ trait ResponseBuilder
         return $response;
     }
 
+    /**
+     *
+     * @param bool $mode false-ошибка. true-успешно обработан запрос.
+     * @param int $code код ответа
+     * @param null $data опциональный параметр. если нам нужно передать данные типо Json.
+     * @return \Illuminate\Http\JsonResponse
+     */
     protected function buildResponse(bool $mode,int $code,$data=null)
     {
         if ($mode===false){

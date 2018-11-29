@@ -30,6 +30,11 @@ class User extends Authenticatable
 
     public function groups()
     {
-        return $this->belongsToMany(Group::class,'users_groups','user_id','group_id');
+        /**
+         * Всё это можно было в теории не писать - как правило ORM сам поймёт по наименованиям,
+         * но были случаи, когда имена не совпадали - лучше явно указать всё.
+         */
+        return $this->belongsToMany(Group::class,
+            'users_groups','user_id','group_id')->withTimestamps();
     }
 }

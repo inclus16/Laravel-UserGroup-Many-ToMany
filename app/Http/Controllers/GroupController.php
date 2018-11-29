@@ -7,6 +7,7 @@ use App\Services\ModelServices\CRUDService;
 use App\Services\LoggerBuilder;
 use App\Services\ResponseBuilder;
 use App\Services\ValidationService\ValidatorService;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -27,6 +28,15 @@ class GroupController extends Controller
         $this->crud = new CRUDService();
     }
 
+    /**
+     * Вообще можно было всё прописать в контроллере (валидацию, CRUD моделей)
+     * но у нас больше 1 сущности (а в реалиях немеренно может быть). Темболее
+     * они слабо специфичны, так что проще было описать общую логику и
+     * вынести её из контроллера.
+     * см. папку app/Services
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function groupCreate(Request $request)
     {
         $address = $request->ip();
@@ -93,6 +103,14 @@ class GroupController extends Controller
         }
     }
 
+    /**
+     * Тут начинается many-to-many Group
+     * В теории тоже можно было вынести логику.
+     * Но на данный момент тут не так много кода.
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function groupUsersList(Request $request,int $id)
     {
         $group = Group::find($id);
@@ -111,11 +129,21 @@ class GroupController extends Controller
         if ($validator->fails()){
             return $this->buildResponse(false,400,$validator->errors());
         }
+        $userId=$request->input('user_id');
         $group = Group::find($id);
+        $user = User::find($userId);
         if ($group===null){
             return $this->buildResponse(false,400,"Can't find group with ID {$id}");
         }
-        $group->users()->detach($id);
-        return $this->buildResponse(true,200);
+        if($user === null)
+        {
+            return $this->buildResponse(false,400,"Can't find user with ID {$userId}");
+        }
+        $sqlResult=$group->users()->detach($userId);
+        if($sqlResult) {
+            return $this->buildResponse(true, 200);
+        }else{
+            return $this->buildResponse(false,400,"User ID {$userId} not been joined to group ID {$id}");
+        }
     }
 }

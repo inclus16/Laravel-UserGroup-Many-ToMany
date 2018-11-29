@@ -95,11 +95,18 @@ class UsersController extends Controller
         }
     }
 
+    /**
+     * Тут начинается many-to-many User
+     * В теории тоже можно было вынести логику.
+     * Но на данный момент тут не так много кода.
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function userJoin(Request $request,int $id)
     {
         $validator = Validator::make($request->all(),
             [
-                'user_id' => 'required|numeric',
                 'group_id' => 'required|numeric',
             ]);
         if ($validator->fails()) {
@@ -108,17 +115,17 @@ class UsersController extends Controller
         $address = $request->ip();
         try {
             $groupId=$request->input('group_id');
-            DB::beginTransaction();
             $user = User::find($id);
-            $testDuplicateRow = $user->groups()->find($groupId);
-            if($testDuplicateRow!==null){
-                return $this->buildResponse(false,400,"Already joined");
-            }
             if ($user===null){
                 return $this->buildResponse(false,400,"Can't find user with ID {$id}");
             }
             if (Group::find($groupId)===null){
                 return $this->buildResponse(false,400,"Can't find group with ID {$groupId}");
+            }
+            DB::beginTransaction();
+            $testDuplicateRow = $user->groups()->find($groupId);
+            if($testDuplicateRow!==null){
+                return $this->buildResponse(false,400,"Already joined");
             }
             $user->groups()->attach($groupId);
             DB::commit();
@@ -133,6 +140,10 @@ class UsersController extends Controller
 
     public function userJoinedList(Request $request,int $id)
     {
-
+        $user = User::find($id);
+        if ($user===null){
+            return $this->buildResponse(false,400,"Can't find user with ID {$id}");
+        }
+        return $this->buildResponse(true,200,$user->groups);
     }
 }

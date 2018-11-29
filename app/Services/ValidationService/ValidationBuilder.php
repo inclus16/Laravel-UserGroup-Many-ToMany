@@ -30,7 +30,7 @@ class ValidationBuilder
         'last_name' => 'required',
         'first_name' => 'required',
         'state' => 'nullable|boolean',
-        'name'=>'required'
+        'name'=>'required|unique:groups,name'
     ];
 
     /**

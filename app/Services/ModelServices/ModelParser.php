@@ -15,6 +15,12 @@ use Illuminate\Support\Facades\Schema;
 trait ModelParser
 {
 
+    /**
+     * В теории, можно было не выносить это в трейт, а задефайнить в CRUDService,
+     * и оттуда передавать в ValidatorServices. Но мне показалось что так лучше.
+     * @param Model $model
+     * @return array
+     */
     protected function getColumns(Model $model):array
     {
         $columns = Schema::getColumnListing($model->getTable());
