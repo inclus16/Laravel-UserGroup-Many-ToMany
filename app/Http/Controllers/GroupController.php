@@ -138,6 +138,7 @@ class GroupController extends Controller
             return $this->buildResponse(false,400,"Can't find user with ID {$userId}");
         }
         $sqlResult=$group->users()->detach($userId);
+        //TODO
         if($sqlResult) {
             return $this->buildResponse(true, 200);
         }else{

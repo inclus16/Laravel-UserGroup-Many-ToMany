@@ -24,7 +24,11 @@ class ValidatorService
 
     public function validate(Model $model,Request $request)
     {
-        $rules=$this->validationBuilder->getRules($model);
+        if($model->id===null) {
+            $rules = $this->validationBuilder->getRulesCreate($model);
+        }else{
+            $rules=$this->validationBuilder->getRulesEdit($model);
+        }
         $validator = Validator::make($request->all(),
             $rules);
         if ($validator->fails()){

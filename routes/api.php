@@ -32,7 +32,7 @@ Route::group(['prefix'=>'group'],function (){
     Route::get('/list','GroupController@groupList')->name('group.list');
     Route::get('/{id}/edit','GroupController@groupEdit')->name('group.edit');
     Route::get('/{id}/delete','GroupController@groupDelete')->name('group.delete');
-    Route::get('/{id}/list','GroupController@groupUsersList')->name('group.users.list');
-    Route::get('/{id}/exclude','GroupController@groupUserExclude')->name('group.user.exclude');
+    Route::get('/{id}/list','GroupController@groupUsersList')->name('group.user.list');
+    Route::get('/{id}/exclude','GroupController@groupUserExclude')->name('group.exclude');
 });
 

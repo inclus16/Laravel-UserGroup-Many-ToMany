@@ -25,7 +25,7 @@ class ValidationBuilder
     /**
      * @var array
      */
-    private $rules=[
+    private $rulesCreate=[
         'email' => 'required|email|unique:users,email',
         'last_name' => 'required',
         'first_name' => 'required',
@@ -33,15 +33,36 @@ class ValidationBuilder
         'name'=>'required|unique:groups,name'
     ];
 
+    private $rulesEdit =[
+        'email' => 'required|email|',
+        'last_name' => 'required',
+        'first_name' => 'required',
+        'state' => 'nullable|boolean',
+        'name'=>'required'
+    ];
+
     /**
      * @param Model $model
      * @return array
      */
-    public function getRules(Model $model):array
+    public function getRulesCreate(Model $model):array
     {
         $buildedRules=[];
         $columns = $this->getColumns($model);
-        foreach ($this->rules as $input=>$rule)
+        foreach ($this->rulesCreate as $input=>$rule)
+        {
+            if(in_array($input,$columns)){
+                $buildedRules[$input]=$rule;
+            }
+        }
+        return $buildedRules;
+    }
+
+    public function getRulesEdit(Model $model):array
+    {
+        $buildedRules=[];
+        $columns = $this->getColumns($model);
+        foreach ($this->rulesEdit as $input=>$rule)
         {
             if(in_array($input,$columns)){
                 $buildedRules[$input]=$rule;
