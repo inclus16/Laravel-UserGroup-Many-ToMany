@@ -51,7 +51,6 @@ class GroupController extends Controller
             } catch (\Exception $exception) {
                 $this->logger->critical("Неизвестная ошибка при попытке создать группу с IP {$address}, 
                 сообщение ошибки: {$exception->getMessage()}");
-                DB::rollBack();
                 return $this->buildResponse(false, 500);
             }
         }
@@ -74,7 +73,6 @@ class GroupController extends Controller
             } catch (\Exception $exception) {
                 $this->logger->critical("Неизвестная ошибка при попытке редактировать группу c ID {$id} с IP {$address}, 
                 сообщение ошибки: {$exception->getMessage()}");
-                DB::rollBack();
                 return $this->buildResponse(false, 500);
             }
         }
@@ -105,7 +103,7 @@ class GroupController extends Controller
 
     /**
      * Тут начинается many-to-many Group
-     * В теории тоже можно было вынести логику.
+     * Тоже можно было вынести логику.
      * Но на данный момент тут не так много кода.
      * @param Request $request
      * @param int $id

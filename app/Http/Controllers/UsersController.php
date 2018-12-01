@@ -42,8 +42,7 @@ class UsersController extends Controller
                 return $this->buildResponse(true,200);
             }catch (\Exception $exception){
                 $this->logger->critical("Неизвестная ошибка при попытке создать пользователя с IP {$address}, 
-                сообщение ошибки: {$exception->getMessage()}");
-                DB::rollBack();
+                                сообщение ошибки: {$exception->getMessage()}");
                 return $this->buildResponse(false,500);
             }
         }
@@ -66,7 +65,6 @@ class UsersController extends Controller
             }catch (\Exception $exception){
                 $this->logger->critical("Неизвестная ошибка при попытке редактировать пользователя c ID {$id} с IP {$address}, 
                 сообщение ошибки: {$exception->getMessage()}");
-                DB::rollBack();
                 return $this->buildResponse(false,500);
             }
         }
@@ -97,7 +95,7 @@ class UsersController extends Controller
 
     /**
      * Тут начинается many-to-many User
-     * В теории тоже можно было вынести логику.
+     * Тоже можно было вынести логику.
      * Но на данный момент тут не так много кода.
      * @param Request $request
      * @param int $id
@@ -131,6 +129,7 @@ class UsersController extends Controller
             DB::commit();
             return $this->buildResponse(true, 200);
         } catch (\Exception $exception) {
+            DB::rollBack();
             $this->logger->critical("Неизвестная ошибка при попытке добавить пользователя c ID {$id} 
              в группу {$groupId} с IP {$address}, 
                 сообщение ошибки: {$exception->getMessage()}");

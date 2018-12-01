@@ -55,7 +55,9 @@ class CRUDService
      */
     public function delete(Model $model):void
     {
+        DB::beginTransaction();
         $model->delete();
+        DB::commit();
     }
 
 }
