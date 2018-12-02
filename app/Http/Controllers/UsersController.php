@@ -33,7 +33,7 @@ class UsersController extends Controller
     {
         $address = $request->ip();
         $user = new User();
-        $validatorResult=$this->validator->validate($user,$request);
+        $validatorResult=$this->validator->validate($user,$request->all());
         if($validatorResult){
             return $this->buildResponse(false,400,$validatorResult);
         }else{
@@ -55,7 +55,7 @@ class UsersController extends Controller
         if(is_null($user)){
             return $this->buildResponse(false,400,"Can't find user with ID {$id}");
         }
-        $validatorResult=$this->validator->validate($user,$request);
+        $validatorResult=$this->validator->validate($user,$request->all());
         if($validatorResult){
             return $this->buildResponse(false,400,$validatorResult);
         }else{

@@ -41,7 +41,7 @@ class GroupController extends Controller
     {
         $address = $request->ip();
         $group = new Group();
-        $validatorResult = $this->validator->validate($group, $request);
+        $validatorResult = $this->validator->validate($group, $request->all());
         if ($validatorResult) {
             return $this->buildResponse(false, 400, $validatorResult);
         } else {
@@ -63,7 +63,7 @@ class GroupController extends Controller
         if (is_null($user)) {
             return $this->buildResponse(false, 400, "Can't find group with ID {$id}");
         }
-        $validatorResult = $this->validator->validate($user, $request);
+        $validatorResult = $this->validator->validate($user, $request->all());
         if ($validatorResult) {
             return $this->buildResponse(false, 400, $validatorResult);
         } else {
@@ -139,10 +139,12 @@ class GroupController extends Controller
         }
         $sqlResult=$group->users()->detach($userId);
         //TODO
-        if($sqlResult) {
-            return $this->buildResponse(true, 200);
-        }else{
-            return $this->buildResponse(false,400,"User ID {$userId} not been joined to group ID {$id}");
-        }
+        return DB::transaction(function () use ($sqlResult,$userId,$id) {
+            if ($sqlResult) {
+                return $this->buildResponse(true, 200);
+            } else {
+                return $this->buildResponse(false, 400, "User ID {$userId} not been joined to group ID {$id}");
+            }
+        });
     }
 }

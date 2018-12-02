@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Group;
 use App\Services\Tests\FactoryHelper;
+use Faker\Factory;
+use Faker\Provider\fa_IR\Address;
 use Tests\TestCase;
 
 
@@ -22,7 +24,7 @@ class GroupTest extends TestCase
     public function testGroupEdit()
     {
         $group=$this->getExistingModel(Group::class);
-        $this->get(route('group.edit',[$group->id,'name'=>$group->name]))
+        $this->get(route('group.edit',[$group->id,'name'=>uniqid()]))
             ->assertJson(['status'=>'ok']);
     }
 
