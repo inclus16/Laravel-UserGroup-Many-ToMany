@@ -1,7 +1,11 @@
 <?php
-
+/**
+ * Created by PhpStorm.
+ * User: Анна
+ * Date: 01.12.2018
+ * Time: 17:05
+ */
 use Faker\Generator as Faker;
-
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -13,11 +17,8 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(App\User::class, function (Faker $faker) {
+$factory->define(App\Group::class, function (Faker $faker) {
     return [
-        'last_name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'first_name'=>$faker->name,
-        'state'=>$faker->boolean
+        'name' => $faker->name
     ];
 });
