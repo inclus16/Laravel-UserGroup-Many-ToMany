@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/enter','AdminController@enterGet')->name('enter.get');
+Route::post('/enter/post','AdminController@enterPost')->name('enter.post');
+Route::group(['middleware'=>'auth'],function (){
+   Route::get('/','AdminController@index')->name('index');
 });
